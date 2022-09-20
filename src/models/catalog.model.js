@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 const CatalogSchema = mongoose.Schema({
     products: {
@@ -10,4 +11,4 @@ const CatalogSchema = mongoose.Schema({
 })
 
 
-module.exports  =  mongoose.model('Catalog', CatalogSchema);
+module.exports = mongoose.model('Catalog', CatalogSchema);

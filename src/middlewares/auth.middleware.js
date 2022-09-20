@@ -1,20 +1,17 @@
 const JWT = require('jsonwebtoken');
-const User = require('../models/user.model');
-const { genErrorResponse, genSuccessResponse } = require('../utils/response')
+const { User } = require('../models')
+const { genErrorResponse } = require('../utils/response');
+const utils = require('../utils/utils');
 
-const tokenExtractor = (req) => {
-    var token = null;
-    if (req.header('authorization')) {
-        token = req.header('Authorization');
-        token = token.split(" ");
-        token = token?.length == 2 ? token[1] : null;
-    }
-    return token;
-}
+
 module.exports = {
     isAuthenticated: (req, res, next) => {
-        var token = tokenExtractor(req);
+        var token = utils.tokenExtractor(req);
+        if (!token) return res.json(genErrorResponse("Couldn't find access token in request")).status(401)
+
         var payload = JWT.decode(token);
+        if (!payload) return res.json(genErrorResponse("Invalid access token")).status(401)
+
         User.findById({ _id: payload.sub }, (err, user) => {
             if (err) return res.json(genErrorResponse(err.message)).status(401);;
             if (!user) return res.json(genErrorResponse()).status(401);
@@ -22,5 +19,10 @@ module.exports = {
             req.user = user;
             next()
         })
+    },
+
+    isSeller: (req, res, next) => {
+        if (!utils.isSeller(req.user)) return res.json(genErrorResponse("Loggedin user is not a seller")).status(401);
+        next()
     }
 }

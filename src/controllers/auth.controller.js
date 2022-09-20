@@ -1,4 +1,4 @@
-const User = require('../models/user.model')
+const { User } = require('../models')
 const JWT = require('jsonwebtoken')
 const { genErrorResponse, genSuccessResponse } = require('../utils/response')
 
@@ -23,14 +23,14 @@ module.exports = {
     signup: async (req, res) => {
         const { email } = req.body;
         const user = await User.findOne({ email })
-        if (user) return res.json({ message: { msgBody: 'Email Already Registered!', msgError: true } })
+        if (user) return res.json(genErrorResponse("Email Already Registered!")).status(400)
         const newUser = new User(req.body);
         newUser.save((err, user) => {
             if (err) {
-                return res.json({ message: { msgBody: 'Error has occoured', msgError: true } })
+                return res.json(genErrorResponse("Error has occoured")).status(400)
             }
-            if (!user) return res.json({ message: { msgBody: 'Error has occoured', msgError: true } })
-            return res.json({ message: { msgBody: 'User Successfully Created', msgError: false } })
+            if (!user) return res.json(genErrorResponse("Error has occoured")).status(400)
+            return res.json(genSuccessResponse("User Successfully Created", user))
         })
     },
 
@@ -41,11 +41,11 @@ module.exports = {
             if (!user) return res.status(401).json(genErrorResponse());
             const { _id, email, username, role, college, sem, year, branch, url } = user;
             const token = signToken(_id);
-            return res.json({
+            return res.json(genSuccessResponse("", {
                 isAuthenticated: true,
                 token: token,
                 user: { _id, email, username, role, college, sem, year, branch, url }
-            })
+            }))
 
         })
     },
@@ -53,7 +53,10 @@ module.exports = {
     authenticated: (req, res) => {
         if (req.isAuthenticated) {
             const { _id, email, username, role, college, sem, year, branch, url } = req.user;
-            return res.json({ isAuthenticated: true, user: { _id, email, username, role, college, sem, year, branch, url } })
+            return res.json(genSuccessResponse("", {
+                isAuthenticated: true,
+                user: { _id, email, username, role, college, sem, year, branch, url }
+            }))
         }
     }
 }
