@@ -3,14 +3,22 @@ const { Product, Catalog } = require('../models')
 
 module.exports = {
     createCatalog: async (req, res) => {
-        const { products } = req.body;
-        const savedProducts = await Product.insertMany(products)
-        if (!savedProducts) res.json(genErrorResponse("Error while saving products"))
+        try {
+            const sellerId = req.user.id;
+            const catalog = Catalog.findOne({ sellerId })
+            if (catalog) return res.json(genErrorResponse(`Catalog already exists for seller ${sellerId}`))
 
-        const catalog = new Catalog({ products: savedProducts, sellerId: req.user.id })
-        const savedCatalog = await catalog.save()
-        if (!savedCatalog) res.json(genErrorResponse("Error while saving catalog"))
-        res.json(genSuccessResponse("Created catalog successfully!", savedCatalog))
+            const { products } = req.body;
+            const savedProducts = await Product.insertMany(products)
+            if (!savedProducts) res.json(genErrorResponse("Error while saving products"))
+
+            const newCatalog = new Catalog({ products: savedProducts, sellerId: sellerId })
+            const savedCatalog = await newCatalog.save()
+            if (!savedCatalog) res.json(genErrorResponse("Error while saving catalog"))
+            res.json(genSuccessResponse("Created catalog successfully!", savedCatalog))
+        } catch (err) {
+            return res.json(genErrorResponse("Something went wrong while creating catalog")).status(400)
+        }
     },
 
     orders: (req, res) => {

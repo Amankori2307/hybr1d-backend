@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 const CatalogSchema = mongoose.Schema({
     sellerId: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        unique: true,
     },
 
     products: {

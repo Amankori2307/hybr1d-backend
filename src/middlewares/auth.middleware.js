@@ -24,5 +24,10 @@ module.exports = {
     isSeller: (req, res, next) => {
         if (!utils.isSeller(req.user)) return res.json(genErrorResponse("Loggedin user is not a seller")).status(401);
         next()
+    },
+
+    isBuyer: (req, res, next) => {
+        if (!utils.isBuyer(req.user)) return res.json(genErrorResponse("Loggedin user is not a seller")).status(401);
+        next()
     }
 }

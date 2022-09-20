@@ -1,9 +1,13 @@
-const BUYER = "BUYER";
-const SELLER = "SELLER";
+const { SELLER, BUYER } = require("./constants");
+
 
 module.exports = {
     isSeller: (user) => {
         return user.role == SELLER
+    },
+
+    isBuyer: (user) => {
+        return user.role == BUYER
     },
 
     tokenExtractor: (req) => {

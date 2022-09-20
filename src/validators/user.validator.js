@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { SELLER, BUYER } = require('../utils/constants');
 
 const user = Joi.object({
     email: Joi.string()
@@ -11,7 +12,7 @@ const user = Joi.object({
         .message("Minimum eight characters, at least one letter, one number and one special character")
         .required(),
     role: Joi.string()
-        .valid("SELLER", "BUYER")
+        .valid(SELLER, BUYER)
         .required()
 })
 
