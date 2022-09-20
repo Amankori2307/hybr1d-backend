@@ -5,8 +5,10 @@ const User = require('../models/user.model')
 
 const tokenExtractor = (req) => {
     var token = null;
-    if (req.cookies && req.cookies['access_token']) {
-        token = req.cookies['access_token']
+    if (req.header('authorization')) {
+        token = req.header('Authorization');
+        token = token.split(" ");
+        token = token?.length == 2 ? token[1] : null;
     }
     return token;
 }

@@ -21,7 +21,7 @@ const UserSchema = mongoose.Schema({
         default: '/profile/default.png'
     },
     role: {
-        type: Number,
+        type: String,
         enum: [
             "BUYER",
             "SELLER"
