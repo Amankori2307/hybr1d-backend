@@ -14,7 +14,7 @@ module.exports = {
 
         User.findById({ _id: payload.sub }, (err, user) => {
             if (err) return res.json(genErrorResponse(err.message)).status(401);;
-            if (!user) return res.json(genErrorResponse()).status(401);
+            if (!user) return res.json(genErrorResponse("Either the token has expired or the token is incorrect")).status(401);
             req.isAuthenticated = true;
             req.user = user;
             next()

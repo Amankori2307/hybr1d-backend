@@ -14,5 +14,9 @@ module.exports = {
             token = token?.length == 2 ? token[1] : null;
         }
         return token;
+    },
+    getUserDetailsToSend: (user) => {
+        const { email, id, role } = user;
+        return { email, id, role }
     }
 }
