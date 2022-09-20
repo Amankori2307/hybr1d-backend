@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { buyerCtrl } = require('../controllers')
-const { authMiddleware } = require('../middlewares')
+const { authMiddleware, validatorMiddleware } = require('../middlewares')
 
 router.get("/list-of-sellers", [
     authMiddleware.isAuthenticated,
@@ -15,7 +15,8 @@ router.get("/seller-catalog/:sellerId", [
 
 router.post("/create-order/:sellerId", [
     authMiddleware.isAuthenticated,
-    authMiddleware.isBuyer
+    authMiddleware.isBuyer,
+    validatorMiddleware.validate('order')
 ], buyerCtrl.createOrder)
 
 module.exports = router

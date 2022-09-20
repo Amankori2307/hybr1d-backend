@@ -5,7 +5,7 @@ module.exports = {
     createCatalog: async (req, res) => {
         try {
             const sellerId = req.user.id;
-            const catalog = Catalog.findOne({ sellerId })
+            const catalog = await Catalog.findOne({ sellerId })
             if (catalog) return res.json(genErrorResponse(`Catalog already exists for seller ${sellerId}`))
 
             const { products } = req.body;

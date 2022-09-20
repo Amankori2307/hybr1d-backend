@@ -1,6 +1,7 @@
-const { User, Catalog } = require("../models")
+const { User, Catalog, Order } = require("../models")
 const { SELLER } = require("../utils/constants")
 const { genSuccessResponse, genErrorResponse } = require("../utils/response")
+const { catalog } = require("../validators")
 
 module.exports = {
     listOfSellers: async (req, res) => {
@@ -24,7 +25,29 @@ module.exports = {
         }
     },
 
-    createOrder: (req, res) => {
-        return res.json(genSuccessResponse("createOrder"))
+    createOrder: async (req, res) => {
+        try {
+            const { sellerId, products } = req.body;
+            const seller = await User.findById(sellerId)
+            if (!seller) return res.json(genErrorResponse("Error while fetching seller"));
+
+            const catalog = await Catalog.findOne({ sellerId })
+            if (!catalog) return res.json(genErrorResponse("Error while fetching catalog"));
+            console.log(catalog.products)
+
+            products.forEach(product => {
+                if (!catalog.products.includes(product)) {
+                    return res.json(genErrorResponse(`Product ${product} doesn't belong to seller ${sellerId}`))
+                }
+            })
+
+            const order = new Order({ sellerId: sellerId, product: products, buyerId: req.user.id });
+            const savedOrder = order.save();
+            if (!savedOrder) return res.json("Error while saving order")
+
+            return res.json(genErrorResponse("Order created successfuly", order))
+        } catch {
+            return res.json(genErrorResponse("Something went wrong while creating order"))
+        }
     },
 }   
