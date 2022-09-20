@@ -1,0 +1,154 @@
+{
+	"info": {
+		"_postman_id": "1a25b629-0707-4bbf-9817-450f4806ab5e",
+		"name": "APIs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "17167850"
+	},
+	"item": [
+		{
+			"name": "{{url}}/api/auth/register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"email\": \"buyer1@mailinator.com\",\n   \"password\": \"password@1\",\n   \"role\": \"BUYER\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{url}}/api/auth/register"
+			},
+			"response": []
+		},
+		{
+			"name": "{{url}}/api/auth/login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"seller3@mailinator.com\",\n    \"password\": \"password@1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{url}}/api/auth/login"
+			},
+			"response": []
+		},
+		{
+			"name": "{{url}}/api/auth/authenticated",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{sellerToken}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{url}}/api/auth/authenticated"
+			},
+			"response": []
+		},
+		{
+			"name": "{{url}}/api/seller/create-catalog",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{sellerToken}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"products\": [\n        {   \n            \"name\": \"Apple\",\n            \"price\": 150\n        },\n         {   \n            \"name\": \"Banana\",\n            \"price\": 50\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{url}}/api/seller/create-catalog"
+			},
+			"response": []
+		},
+		{
+			"name": "{{url}}/api/buyer/list-of-sellers",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{buyerToken}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{url}}/api/buyer/list-of-sellers"
+			},
+			"response": []
+		},
+		{
+			"name": "{{url}}/api/buyer/seller-catalog/{{sellerId}}",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{buyerToken}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{url}}/api/buyer/seller-catalog/6329fdc95f51e23423563c85"
+			},
+			"response": []
+		},
+		{
+			"name": "{{url}}/api/buyer/create-order/{{sellerId}}",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{buyerToken}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"sellerId\": \"6329fdc95f51e23423563c85\",\n    \"products\": [\n        \"632a1029784aba78e6388146\",\n        \"632a1029784aba78e6388147\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{url}}/api/buyer/create-order/{{sellerId}}"
+			},
+			"response": []
+		},
+		{
+			"name": "{{url}}/api/seller/orders",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{sellerToken}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{url}}/api/seller/orders"
+			},
+			"response": []
+		}
+	]
+}
