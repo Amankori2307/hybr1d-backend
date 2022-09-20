@@ -9,11 +9,11 @@ module.exports = {
 
         const catalog = new Catalog({ products: savedProducts, sellerId: req.user.id })
         const savedCatalog = await catalog.save()
-        if(!savedCatalog) res.json(genErrorResponse("Error while saving catalog"))
+        if (!savedCatalog) res.json(genErrorResponse("Error while saving catalog"))
         res.json(genSuccessResponse("Created catalog successfully!", savedCatalog))
     },
 
-    getOrders: (req, res) => {
-        res.json(genSuccessResponse())
+    orders: (req, res) => {
+        res.json(genSuccessResponse("orders"))
     }
 }

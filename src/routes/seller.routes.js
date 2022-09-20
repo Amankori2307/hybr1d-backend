@@ -7,6 +7,6 @@ router.post('/create-catalog', [
     authMiddleware.isAuthenticated,
     authMiddleware.isSeller,
     validatorMiddleware.validate('catalog')], sellerCtrl.createCatalog);
-router.get('/orders', [authMiddleware.isAuthenticated, authMiddleware.isSeller], sellerCtrl.getOrders)
+router.get('/orders', [authMiddleware.isAuthenticated, authMiddleware.isSeller], sellerCtrl.orders)
 
 module.exports = router
