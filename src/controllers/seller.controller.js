@@ -1,5 +1,5 @@
 const { genSuccessResponse, genErrorResponse } = require("../utils/response")
-const { Product, Catalog } = require('../models')
+const { Product, Catalog, Order } = require('../models')
 
 module.exports = {
     createCatalog: async (req, res) => {
@@ -21,7 +21,15 @@ module.exports = {
         }
     },
 
-    orders: (req, res) => {
-        res.json(genSuccessResponse("orders"))
+    orders: async (req, res) => {
+        try {
+            const sellerId = req.user.id;
+            const orders = await Order.find({ sellerId: sellerId })
+            if (!orders) return res.json(`Error while fetching orders for seller ${sellerId}`).status(400)
+            return res.json(genSuccessResponse("", orders))
+        } catch (err) {
+            console.log(err)
+            return res.json(genErrorResponse(`Something went worng while fetching orders for seller ${req.user.id}`)).status(400)
+        }
     }
 }

@@ -41,7 +41,7 @@ module.exports = {
                 }
             })
 
-            const order = new Order({ sellerId: sellerId, product: products, buyerId: req.user.id });
+            const order = new Order({ sellerId: sellerId, products: products, buyerId: req.user.id });
             const savedOrder = order.save();
             if (!savedOrder) return res.json("Error while saving order")
 
