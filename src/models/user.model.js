@@ -1,28 +1,50 @@
-const mongoose = require('mongoose')
-const { Schema } = mongoose
-const UserSchema = new Schema({
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt')
+
+const UserSchema = mongoose.Schema({
+    username: {
+        type: String,
+        unique: true,
+        required: true
+    },
     email: {
         type: String,
+        unique: true,
         required: true
     },
     password: {
         type: String,
         required: true
-    }
-})
-
-UserSchema.pre('save', async function (next) {
-    try {
-        const user = this;
-        if (!user.isModified('password')) next();
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(this.password, salt);
-        this.password = hashedPassword;
-        next();
-    } catch (error) {
-        return next(error);
-    }
+    },
+    url: {
+        type: String,
+        default: '/profile/default.png'
+    },
+    role: {
+        type: Number,
+        enum: [
+            "BUYER",
+            "SELLER"
+        ],
+        required: true
+    },
 });
 
-const UserModel = mongoose.model('user', UserSchema);
-module.exports = UserModel;
+
+UserSchema.pre('save', function (next) {
+    if (!this.isModified('password')) return next()
+    bcrypt.hash(this.password, 10, (err, hashedPassword) => {
+        if (err) return next(err)
+        this.password = hashedPassword;
+        next();
+    })
+})
+
+UserSchema.methods.comparePassword = function (password, cb) {
+    bcrypt.compare(password, this.password, (err, isMatch) => {
+        if (err) return cb(err)
+        if (!isMatch) return cb(null, false);
+        cb(null, this);
+    })
+}
+module.exports = mongoose.model('User', UserSchema);
