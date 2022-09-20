@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-const productValidator = Joi.object({
+const product = Joi.object({
     name: Joi.string()
         .min(1)
         .max(100)
@@ -13,4 +13,4 @@ const productValidator = Joi.object({
         .required()
 })
 
-module.exports = productValidator
+module.exports = product

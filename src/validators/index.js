@@ -1,7 +1,9 @@
-const catalogValidator = require("./catalog.validator");
-const productValidator = require("./product.validator");
+const catalog = require("./catalog.validator");
+const product = require("./product.validator");
+const user = require("./user.validator")
 
 module.exports = {
-    product: productValidator,
-    catalog: catalogValidator
+    product,
+    catalog,
+    user
 }

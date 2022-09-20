@@ -1,12 +1,12 @@
 const Joi = require('joi');
-const productSchema = require('./product.validator')
+const product = require('./product.validator')
 
-const catalogValidator = Joi.object({
+const catalog = Joi.object({
     products: Joi.array()
-        .items(productSchema)
+        .items(product)
         .min(1)
         .unique((a, b) => a.name === b.name).message("Product name should be unique")
         .required()
 })
 
-module.exports = catalogValidator
+module.exports = catalog
