@@ -7,10 +7,10 @@ module.exports = {
     listOfSellers: async (req, res) => {
         try {
             const sellers = await User.find({ role: SELLER }).select({ password: 0 })
-            if (!sellers) return res.json(genErrorResponse("Error while fetching list of sellers")).status(400);
+            if (!sellers) return res.status(400).json(genErrorResponse("Error while fetching list of sellers"));
             return res.json(genSuccessResponse("", sellers))
         } catch (err) {
-            return res.json(genErrorResponse("Something went wrong while fetching list of sellers"))
+            return res.status(400).json(genErrorResponse("Something went wrong while fetching list of sellers"))
         }
     },
 
@@ -18,10 +18,10 @@ module.exports = {
         try {
             const { sellerId } = req.params
             const catalog = await Catalog.findOne({ sellerId }).populate('products')
-            if (!catalog) return res.json(genErrorResponse(`Error while getting catalog for seller ${sellerId}`)).status(400)
+            if (!catalog) return res.status(400).json(genErrorResponse(`Error while getting catalog for seller ${sellerId}`))
             return res.json(genSuccessResponse("", catalog))
         } catch (err) {
-            return res.json(genErrorResponse(`Something went wrong while fetching seller ${req.params.id}'s catalog`))
+            return res.status(400).json(genErrorResponse(`Something went wrong while fetching seller ${req.params.id}'s catalog`))
         }
     },
 
@@ -29,15 +29,15 @@ module.exports = {
         try {
             const { sellerId, products } = req.body;
             const seller = await User.findById(sellerId)
-            if (!seller) return res.json(genErrorResponse("Error while fetching seller"));
+            if (!seller) return res.status(400).json(genErrorResponse("Error while fetching seller"));
 
             const catalog = await Catalog.findOne({ sellerId })
-            if (!catalog) return res.json(genErrorResponse("Error while fetching catalog"));
+            if (!catalog) return res.status(400).json(genErrorResponse("Error while fetching catalog"));
             console.log(catalog.products)
 
             products.forEach(product => {
                 if (!catalog.products.includes(product)) {
-                    return res.json(genErrorResponse(`Product ${product} doesn't belong to seller ${sellerId}`))
+                    return res.status(400).json(genErrorResponse(`Product ${product} doesn't belong to seller ${sellerId}`))
                 }
             })
 
@@ -45,9 +45,9 @@ module.exports = {
             const savedOrder = order.save();
             if (!savedOrder) return res.json("Error while saving order")
 
-            return res.json(genErrorResponse("Order created successfuly", order))
+            return res.json(genSuccessResponse("Order created successfuly", order))
         } catch {
-            return res.json(genErrorResponse("Something went wrong while creating order"))
+            return res.status(400).json(genErrorResponse("Something went wrong while creating order"))
         }
     },
 }   

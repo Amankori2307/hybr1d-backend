@@ -24,15 +24,15 @@ module.exports = {
     signup: async (req, res) => {
         try {
             const user = await User.findOne({ email: req.body.email })
-            if (user) return res.json(genErrorResponse("Email already registered!")).status(400)
+            if (user) return res.status(400).json(genErrorResponse("Email already registered!"))
             const newUser = new User(req.body);
             const savedUser = await newUser.save()
             if (!savedUser) {
-                return res.json(genErrorResponse("Error while creating user")).status(400)
+                return res.status(400).json(genErrorResponse("Error while creating user"))
             }
             return res.json(genSuccessResponse("User created successfully!", getUserDetailsToSend(newUser)))
         } catch (err) {
-            return res.json(genErrorResponse("Something went wrong while creating user"))
+            return res.status(400).json(genErrorResponse("Something went wrong while creating user"))
         }
     },
 

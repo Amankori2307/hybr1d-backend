@@ -6,12 +6,12 @@ module.exports = {
     validate: (validator) => {
         return function (req, res, next) {
             if (!validators.hasOwnProperty(validator)) {
-                return res.json(genErrorResponse("`'${validator}' validator is not exist`")).status(400);
+                return res.status(400).json(genErrorResponse("`'${validator}' validator is not exist`"));
             }
 
             const { error, value } = validators[validator].validate(req.body)
             if (error) {
-                return res.json(genErrorResponse("Invalid request payload", error.details.map(err => err.message)))
+                return res.status(400).json(genErrorResponse("Invalid request payload", error.details.map(err => err.message)))
             }
             req.body = value;
             next();
