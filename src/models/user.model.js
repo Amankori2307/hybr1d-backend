@@ -2,11 +2,6 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt')
 
 const UserSchema = mongoose.Schema({
-    username: {
-        type: String,
-        unique: true,
-        required: true
-    },
     email: {
         type: String,
         unique: true,
@@ -16,10 +11,6 @@ const UserSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    url: {
-        type: String,
-        default: '/profile/default.png'
-    },
     role: {
         type: String,
         enum: [
@@ -28,7 +19,7 @@ const UserSchema = mongoose.Schema({
         ],
         required: true
     },
-});
+}, { timestamps: true });
 
 
 UserSchema.pre('save', function (next) {
@@ -47,4 +38,5 @@ UserSchema.methods.comparePassword = function (password, cb) {
         cb(null, this);
     })
 }
+
 module.exports = mongoose.model('User', UserSchema);

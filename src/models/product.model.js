@@ -5,10 +5,12 @@ const ProductSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    name: {
+    price: {
         type: Number,
         required: true,
+        min: 0,
+        max: 1000000
     },
-})
+}, { timestamps: true });
 
 module.exports = mongoose.model('Product', ProductSchema);

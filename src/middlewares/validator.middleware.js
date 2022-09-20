@@ -1,3 +1,20 @@
+const Joi = require('joi')
+const { genErrorResponse } = require('../utils/response')
+const validators = require('../validators')
+
 module.exports = {
-    // validateCatalog
+    validate: (validator) => {
+        return function (req, res, next) {
+            if (!validators.hasOwnProperty(validator)) {
+                return res.json(genErrorResponse("`'${validator}' validator is not exist`")).status(400);
+            }
+
+            const { error, value } = validators[validator].validate(req.body)
+            if (error) {
+                return res.json(genErrorResponse("Invalid request payload", error.details.map(err => err.message)))
+            }
+            req.body = value;
+            next();
+        }
+    }
 }
