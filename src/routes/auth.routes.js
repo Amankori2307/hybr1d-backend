@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const AuthCtrl = require('../controllers/auth.controller')
-const passport = require('../utils/passport')
+const authMiddleware = require('../middlewares/auth.middleware')
 
 router.post('/register', AuthCtrl.signup);
-router.post('/login', passport.authenticate('local', { session: false }), AuthCtrl.login)
-router.get('/authenticated', passport.authenticate('jwt', { session: false }), AuthCtrl.authenticated)
+router.post('/login', AuthCtrl.login)
+router.get('/authenticated', authMiddleware.isAuthenticated, AuthCtrl.authenticated)
 
 module.exports = router
